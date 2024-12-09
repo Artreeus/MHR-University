@@ -1,8 +1,9 @@
-import { model, Schema } from "mongoose";
-import { TAcademicDepartment } from "./depertment.interface";
-import AppError from "../../errors/AppError";
+import httpStatus from 'http-status';
+import { Schema, model } from 'mongoose';
+import AppError from '../../errors/AppError';
+import { TAcademicDepartment } from './academicDepartment.interface';
 
-const academicDepartmentschema = new Schema<TAcademicDepartment>(
+const academicDepartmentSchema = new Schema<TAcademicDepartment>(
   {
     name: {
       type: String,
@@ -11,16 +12,16 @@ const academicDepartmentschema = new Schema<TAcademicDepartment>(
     },
     academicFaculty: {
       type: Schema.Types.ObjectId,
-      ref: "AcademicFaculty",
+      ref: 'AcademicFaculty',
     },
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 
-academicDepartmentschema.pre('save', async function (next) {
+academicDepartmentSchema.pre('save', async function (next) {
   const isDepartmentExist = await AcademicDepartment.findOne({
     name: this.name,
   });
@@ -35,7 +36,7 @@ academicDepartmentschema.pre('save', async function (next) {
   next();
 });
 
-academicDepartmentschema.pre('findOneAndUpdate', async function (next) {
+academicDepartmentSchema.pre('findOneAndUpdate', async function (next) {
   const query = this.getQuery();
   const isDepartmentExist = await AcademicDepartment.findOne(query);
 
@@ -49,8 +50,7 @@ academicDepartmentschema.pre('findOneAndUpdate', async function (next) {
   next();
 });
 
-
 export const AcademicDepartment = model<TAcademicDepartment>(
-  "AcademicDepartment",
-  academicDepartmentschema
+  'AcademicDepartment',
+  academicDepartmentSchema,
 );

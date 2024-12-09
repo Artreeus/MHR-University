@@ -1,4 +1,3 @@
-
 import { TAcademicDepartment } from './academicDepartment.interface';
 import { AcademicDepartment } from './academicDepartment.model';
 
@@ -13,20 +12,21 @@ const getAllAcademicDepartmentsFromDB = async () => {
 };
 
 const getSingleAcademicDepartmentFromDB = async (id: string) => {
-  const result = await AcademicDepartment.findById(id).populate('academicFaculty');
+  const result =
+    await AcademicDepartment.findById(id).populate('academicFaculty');
   return result;
 };
 
 const updateAcademicDepartmentIntoDB = async (
   id: string,
-  payload: Partial<TAcademicDepartment>
+  payload: Partial<TAcademicDepartment>,
 ) => {
   const result = await AcademicDepartment.findOneAndUpdate(
     { _id: id },
     payload,
     {
       new: true,
-    }
+    },
   );
   return result;
 };
