@@ -1,32 +1,43 @@
-import httpStatus from 'http-status';
-import mongoose from 'mongoose';
-import AppError from '../../errors/AppError';
-import { User } from '../user/user.model';
-import { TStudent } from './student.interface';
-import { Student } from './student.model';
+import httpStatus from "http-status";
+import mongoose from "mongoose";
+import AppError from "../../errors/AppError";
+import { User } from "../user/user.model";
+import { TStudent } from "./student.interface";
+import { Student } from "./student.model";
 
-const getAllStudentsFromDB = async () => {
+const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
+  const studentSearchableFields = ["email", "name.firstname", "presentAddress"];
+  let searchTerm = "";
+
+  if (query?.searchTerm) {
+    searchTerm = query?.searchTerm as string;
+  }
+
+  const searchQuery = Student.find({
+    $or: studentSearchableFields.map((field) => ({
+      [field]: { $regex: searchTerm, $options: "i" },
+    })),
+  });
+
   const result = await Student.find()
-    .populate('admissionSemester')
+    .populate("admissionSemester")
     .populate({
-      path: 'academicDepartment',
+      path: "academicDepartment",
       populate: {
-        path: 'academicFaculty',
+        path: "academicFaculty",
       },
     });
 
   return result;
 };
 
-
-
 const getSingleStudentFromDB = async (id: string) => {
   const result = await Student.findOne({ id })
-    .populate('admissionSemester')
+    .populate("admissionSemester")
     .populate({
-      path: 'academicDepartment',
+      path: "academicDepartment",
       populate: {
-        path: 'academicFaculty',
+        path: "academicFaculty",
       },
     });
   return result;
@@ -75,21 +86,21 @@ const deleteStudentFromDB = async (id: string) => {
     const deletedStudent = await Student.findOneAndUpdate(
       { id },
       { isDeleted: true },
-      { new: true, session },
+      { new: true, session }
     );
 
     if (!deletedStudent) {
-      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to delete student');
+      throw new AppError(httpStatus.BAD_REQUEST, "Failed to delete student");
     }
 
     const deletedUser = await User.findOneAndUpdate(
       { id },
       { isDeleted: true },
-      { new: true, session },
+      { new: true, session }
     );
 
     if (!deletedUser) {
-      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to delete user');
+      throw new AppError(httpStatus.BAD_REQUEST, "Failed to delete user");
     }
 
     await session.commitTransaction();
@@ -99,7 +110,7 @@ const deleteStudentFromDB = async (id: string) => {
   } catch (err) {
     await session.abortTransaction();
     await session.endSession();
-    throw new Error('Failed to delete student');
+    throw new Error("Failed to delete student");
   }
 };
 
