@@ -6,69 +6,81 @@ import { TStudent } from "./student.interface";
 import { Student } from "./student.model";
 
 const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
-  const queryObj = { ...query }; //copy
+  // const queryObj = { ...query }; //copy
 
-  const studentSearchableFields = ["email", "name.firstname", "presentAddress"];
-  let searchTerm = "";
+  // const studentSearchableFields = ["email", "name.firstname", "presentAddress"];
+  // let searchTerm = "";
 
-  if (query?.searchTerm) {
-    searchTerm = query?.searchTerm as string;
-  }
+  // if (query?.searchTerm) {
+  //   searchTerm = query?.searchTerm as string;
+  // }
 
-  const searchQuery = Student.find({
-    $or: studentSearchableFields.map((field) => ({
-      [field]: { $regex: searchTerm, $options: "i" },
-    })),
-  });
+  // const searchQuery = Student.find({
+  //   $or: studentSearchableFields.map((field) => ({
+  //     [field]: { $regex: searchTerm, $options: "i" },
+  //   })),
+  // });
 
   // Filtering
 
-  const excludeFields = ["searchTerm", "sort", "limit", "page", "fields"];
-  excludeFields.forEach((el) => delete queryObj[el]);
+  // const excludeFields = ["searchTerm", "sort", "limit", "page", "fields"];
+  // excludeFields.forEach((el) => delete queryObj[el]);
 
-  const filterQuery = searchQuery
-    .find(queryObj)
-    .populate("admissionSemester")
-    .populate({
-      path: "academicDepartment",
-      populate: {
-        path: "academicFaculty",
-      },
-    });
+  // const filterQuery = searchQuery
+  //   .find(queryObj)
+  //   .populate("admissionSemester")
+  //   .populate({
+  //     path: "academicDepartment",
+  //     populate: {
+  //       path: "academicFaculty",
+  //     },
+  //   });
 
-  let sort = "-createdAt";
-  if (query.sort) {
-    sort = query.sort as string;
-  }
+//   let sort = "-createdAt";
+//   if (query.sort) {
+//     sort = query.sort as string;
+//   }
 
-  const sortQuery = filterQuery.sort(sort);
+//   const sortQuery = filterQuery.sort(sort);
 
-  // Limiting
-  let limit = 1;
-  let page = 1;
-  let skip = 0;
-  if (query.limit) {
-    limit = Number(query.limit);
-  }
-  // pagination
-  if (query.page) {
-    page = Number(query.page);
-    skip = (page - 1) * limit;
-  }
+//   // Limiting
+//   let limit = 1;
+//   let page = 1;
+//   let skip = 0;
+//   if (query.limit) {
+//     limit = Number(query.limit);
+//   }
+//   // pagination
+//   if (query.page) {
+//     page = Number(query.page);
+//     skip = (page - 1) * limit;
+//   }
 
-  const paginateQuery = sortQuery.skip(skip);
+//   const paginateQuery = sortQuery.skip(skip);
 
-  const limitQuery = paginateQuery.limit(limit);
+//   const limitQuery = paginateQuery.limit(limit);
 
-  // Field Limiting
-  let fields = "-__v";
+//   // Field Limiting
+//   let fields = "-__v";
 
-  if (query.fields) {
-    fields = (query.fields as string).split(",").join(" ");
-  }
-  const fieldQuery = await limitQuery.select(fields);
+//   if (query.fields) {
+//     fields = (query.fields as string).split(",").join(" ");
+//   }
+//   const fieldQuery = await limitQuery.select(fields);
 
-  return fieldQuery;
+//   return fieldQuery;
+
+
+
+
+
+
+
+
+
+
+
+
 };
 
 const getSingleStudentFromDB = async (id: string) => {
