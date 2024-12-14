@@ -1,13 +1,15 @@
-import mongoose from 'mongoose';
-import config from '../../config';
-import { AcademicSemester } from '../AcademicSemester/semester.model';
-import { TStudent } from '../student/student.interface';
-import { Student } from '../student/student.model';
-import { TUser } from './user.interface';
-import { User } from './user.model';
-import { generateStudentId } from './user.utils';
-import AppError from '../../errors/AppError';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import httpStatus from "http-status";
+import mongoose from "mongoose";
+import config from "../../config";
+import AppError from "../../errors/AppError";
+import { TStudent } from "../student/student.interface";
+import { Student } from "../student/student.model";
 
+import { TUser } from "./user.interface";
+import { User } from "./user.model";
+import { generateStudentId } from "./user.utils";
+import { AcademicSemester } from "../AcademicSemester/semester.model";
 
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
   // create a user object
@@ -17,12 +19,16 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
   userData.password = password || (config.default_password as string);
 
   //set student role
-  userData.role = 'student';
+  userData.role = "student";
 
   // find academic semester info
   const admissionSemester = await AcademicSemester.findById(
-    payload.admissionSemester,
+    payload.admissionSemester
   );
+
+  if (!admissionSemester) {
+    throw new AppError(400, "Admission semester not found");
+  }
 
   const session = await mongoose.startSession();
 
@@ -36,7 +42,7 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
 
     //create a student
     if (!newUser.length) {
-      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create user');
+      throw new AppError(httpStatus.BAD_REQUEST, "Failed to create user");
     }
     // set id , _id as user
     payload.id = newUser[0].id;
@@ -47,14 +53,14 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
     const newStudent = await Student.create([payload], { session });
 
     if (!newStudent.length) {
-      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create student');
+      throw new AppError(httpStatus.BAD_REQUEST, "Failed to create student");
     }
 
     await session.commitTransaction();
     await session.endSession();
 
     return newStudent;
-  } catch (err:any) {
+  } catch (err: any) {
     await session.abortTransaction();
     await session.endSession();
     throw new Error(err);

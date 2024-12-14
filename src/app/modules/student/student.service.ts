@@ -6,6 +6,8 @@ import { TStudent } from "./student.interface";
 import { Student } from "./student.model";
 
 const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
+  const queryObj = { ...query }; //copy
+
   const studentSearchableFields = ["email", "name.firstname", "presentAddress"];
   let searchTerm = "";
 
@@ -19,7 +21,13 @@ const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
     })),
   });
 
-  const result = await Student.find()
+  // Filtering
+
+  const excludeFields = ["searchTerm", "sort"];
+  excludeFields.forEach((el) => delete queryObj[el]);
+
+  const filterQuery = searchQuery
+    .find(queryObj)
     .populate("admissionSemester")
     .populate({
       path: "academicDepartment",
@@ -28,8 +36,20 @@ const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
       },
     });
 
-  return result;
+  let sort = "-createdAt";
+  if (query.sort) {
+    sort = query.sort as string;
+  }
+
+  const sortQuery = await filterQuery.sort(sort);
+
+  return sortQuery;
 };
+
+
+// Limiting 
+
+
 
 const getSingleStudentFromDB = async (id: string) => {
   const result = await Student.findOne({ id })
