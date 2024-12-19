@@ -11,6 +11,8 @@ import { hasTimeConflict } from './OfferedCourse.utils';
 import { AcademicFaculty } from '../AcademicFaculty/faculty.model';
 import { AcademicDepartment } from '../AcademicDepartment/academicDepartment.model';
 
+
+
 const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
   const {
     semesterRegistration,
@@ -90,7 +92,7 @@ const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
   }
 
   // check if the same offered course same section in same registered semester exists
- 
+
   const isSameOfferedCourseExistsWithSameRegisteredSemesterWithSameSection =
     await OfferedCourse.findOne({
       semesterRegistration,
