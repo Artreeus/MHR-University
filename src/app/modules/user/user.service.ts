@@ -7,10 +7,10 @@ import { TAdmin } from '../Admin/admin.interface';
 import { Admin } from '../Admin/admin.model';
 import { TFaculty } from '../Faculty/faculty.interface';
 import { Faculty } from '../Faculty/faculty.model';
-
+import { AcademicDepartment } from '../academicDepartment/academicDepartment.model';
 import { TStudent } from '../student/student.interface';
 import { Student } from '../student/student.model';
-
+import { AcademicSemester } from './../academicSemester/academicSemester.model';
 import { TUser } from './user.interface';
 import { User } from './user.model';
 import {
@@ -18,8 +18,6 @@ import {
   generateFacultyId,
   generateStudentId,
 } from './user.utils';
-import { AcademicSemester } from '../AcademicSemester/semester.model';
-import { AcademicDepartment } from '../AcademicDepartment/academicDepartment.model';
 
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
   // create a user object

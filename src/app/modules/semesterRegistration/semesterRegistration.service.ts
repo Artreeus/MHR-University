@@ -4,11 +4,10 @@ import mongoose from 'mongoose';
 import QueryBuilder from '../../builder/QueryBuilder';
 import AppError from '../../errors/AppError';
 import { OfferedCourse } from '../OfferedCourse/OfferedCourse.model';
-
+import { AcademicSemester } from '../academicSemester/academicSemester.model';
 import { RegistrationStatus } from './semesterRegistration.constant';
 import { TSemesterRegistration } from './semesterRegistration.interface';
 import { SemesterRegistration } from './semesterRegistration.model';
-import { AcademicSemester } from '../AcademicSemester/semester.model';
 
 const createSemesterRegistrationIntoDB = async (
   payload: TSemesterRegistration,

@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 const createUserNameValidationSchema = z.object({
   firstName: z
@@ -6,7 +6,7 @@ const createUserNameValidationSchema = z.object({
     .min(1)
     .max(20)
     .refine((value) => /^[A-Z]/.test(value), {
-      message: "First Name must start with a capital letter",
+      message: 'First Name must start with a capital letter',
     }),
   middleName: z.string(),
   lastName: z.string(),
@@ -21,33 +21,34 @@ const createGuardianValidationSchema = z.object({
   motherContactNo: z.string(),
 });
 
-const createLocalGuardianValidationSchema  = z.object({
+const createLocalGuardianValidationSchema = z.object({
   name: z.string(),
   occupation: z.string(),
   contactNo: z.string(),
   address: z.string(),
 });
 
-export const createstudentValidationSchema = z.object({
+export const createStudentValidationSchema = z.object({
   body: z.object({
     password: z.string().max(20),
     student: z.object({
-      name:createUserNameValidationSchema,
-      gender: z.enum(["male", "female", "other"]),
+      name: createUserNameValidationSchema,
+      gender: z.enum(['male', 'female', 'other']),
       dateOfBirth: z.string().optional(),
       email: z.string().email(),
       contactNo: z.string(),
       emergencyContactNo: z.string(),
-      bloogGroup: z.enum(["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]),
+      bloogGroup: z.enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
       presentAddress: z.string(),
       permanentAddress: z.string(),
       guardian: createGuardianValidationSchema,
-      localGuardian: createLocalGuardianValidationSchema ,
+      localGuardian: createLocalGuardianValidationSchema,
+      admissionSemester: z.string(),
       profileImg: z.string(),
+      academicDepartment: z.string(),
     }),
   }),
 });
-
 
 const updateUserNameValidationSchema = z.object({
   firstName: z.string().min(1).max(20).optional(),
@@ -70,7 +71,6 @@ const updateLocalGuardianValidationSchema = z.object({
   contactNo: z.string().optional(),
   address: z.string().optional(),
 });
-
 
 export const updateStudentValidationSchema = z.object({
   body: z.object({
@@ -96,6 +96,6 @@ export const updateStudentValidationSchema = z.object({
 });
 
 export const studentValidations = {
-  createstudentValidationSchema,
-  updateStudentValidationSchema
+  createStudentValidationSchema,
+  updateStudentValidationSchema,
 };
