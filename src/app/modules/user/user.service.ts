@@ -181,7 +181,7 @@ const createAdminIntoDB = async (
     const imageName = `${userData.id}${payload?.name?.firstName}`;
     const path = file?.path;
     //send image to cloudinary
-    const { secure_url  } = await sendImageToCloudinary(imageName, path);
+    const { secure_url } = await sendImageToCloudinary(imageName, path);
 
     // create a user (transaction-1)
     const newUser = await User.create([userData], { session });
