@@ -4,7 +4,6 @@ import { Schema, model } from 'mongoose';
 import config from '../../config';
 import { UserStatus } from './user.constant';
 import { TUser, UserModel } from './user.interface';
-
 const userSchema = new Schema<TUser, UserModel>(
   {
     id: {
@@ -31,7 +30,7 @@ const userSchema = new Schema<TUser, UserModel>(
     },
     role: {
       type: String,
-      enum: ['superAdmin', 'student', 'faculty', 'admin'],
+      enum: ['student', 'faculty', 'admin'],
     },
     status: {
       type: String,
@@ -52,10 +51,12 @@ userSchema.pre('save', async function (next) {
   // eslint-disable-next-line @typescript-eslint/no-this-alias
   const user = this; // doc
   // hashing password and save into DB
+
   user.password = await bcrypt.hash(
     user.password,
     Number(config.bcrypt_salt_rounds),
   );
+
   next();
 });
 

@@ -3,7 +3,7 @@ import httpStatus from 'http-status';
 import mongoose from 'mongoose';
 import QueryBuilder from '../../builder/QueryBuilder';
 import AppError from '../../errors/AppError';
-import { User } from '../User/user.model';
+import { User } from '../user/user.model';
 import { AdminSearchableFields } from './admin.constant';
 import { TAdmin } from './admin.interface';
 import { Admin } from './admin.model';
@@ -17,11 +17,7 @@ const getAllAdminsFromDB = async (query: Record<string, unknown>) => {
     .fields();
 
   const result = await adminQuery.modelQuery;
-  const meta = await adminQuery.countTotal();
-  return {
-    result,
-    meta,
-  };
+  return result;
 };
 
 const getSingleAdminFromDB = async (id: string) => {

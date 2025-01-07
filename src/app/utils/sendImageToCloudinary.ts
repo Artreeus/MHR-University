@@ -1,4 +1,4 @@
-import { UploadApiResponse, v2 as cloudinary } from 'cloudinary';
+import { v2 as cloudinary } from 'cloudinary';
 import fs from 'fs';
 import multer from 'multer';
 import config from '../config';
@@ -9,10 +9,7 @@ cloudinary.config({
   api_secret: config.cloudinary_api_secret,
 });
 
-export const sendImageToCloudinary = (
-  imageName: string,
-  path: string,
-): Promise<Record<string, unknown>> => {
+export const sendImageToCloudinary = (imageName: string, path: string) => {
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload(
       path,
@@ -21,7 +18,7 @@ export const sendImageToCloudinary = (
         if (error) {
           reject(error);
         }
-        resolve(result as UploadApiResponse);
+        resolve(result);
         // delete a file asynchronously
         fs.unlink(path, (err) => {
           if (err) {
