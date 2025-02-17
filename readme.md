@@ -2,7 +2,7 @@
 
 [Link to Requirement Analysis Document](https://docs.google.com/document/d/10mkjS8boCQzW4xpsESyzwCCLJcM3hvLghyD_TeXPBx0/edit?usp=sharing)
 
-Description: This document outlines the detailed analysis of Mhr University project requirements.
+Description: This document outlines the detailed analysis of MHR University project requirements.
 
 ---
 
